@@ -17,48 +17,16 @@ canvas.addEventListener(
 );
 
 const statsEl = document.getElementById("stats");
-const button1El = document.getElementById("button1");
-button1El.addEventListener("click", async function () {
-  for (let i = 0; i < 5; i++) {
-    addMesh();
-    await wait(1000);
-  }
-});
 
-const button2El = document.getElementById("button2");
-button2El.addEventListener("click", async function () {
-  for (let i = 0; i < 10; i++) {
-    addMesh();
-    await wait(1000);
-  }
-});
-
-
-const button3El = document.getElementById("button3");
-button3El.addEventListener("click", async function () {
-  for (let i = 0; i < 50; i++) {
-    addMesh();
-    await wait(1000);
-  }
-});
-
-
-function wait(ms) {
-  return new Promise(function (r) {
-    setTimeout(function () {
-      r();
-    }, ms);
-  });
-}
 
 let color = 0;
 let meshes = 0;
 
 // camera
 
-const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 1000);
-camera.position.z = 300;
-camera.position.y = 300;
+const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 5000);
+camera.position.z = 2000;
+camera.position.y = 2000;
 
 // scene/simple mesh
 const scene = new THREE.Scene();
@@ -71,31 +39,76 @@ scene.add(cube);
 const renderer = new THREE.WebGLRenderer({ antialias: true, canvas });
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(width, height);
-
+renderer.setAnimationLoop(animate);
 document.body.appendChild(renderer.domElement);
 
-renderer.onc;
 
 // controls
-
 const controls = new OrbitControls(camera, renderer.domElement);
+controls.dampingFactor = 0.05;
+controls.screenSpacePanning = false;
+controls.minDistance = 100;
+controls.maxDistance = 500;
+controls.maxPolarAngle = Math.PI / 2;
 
 // animation
 
 function animate(time) {
-  controls.update();
+  controls.update(time);
   renderer.render(scene, camera);
-  statsEl.textContent = `Spheres: ${meshes} - ${
-    (renderer.info.render.triangles / 1000000).toFixed(0)
-  } million triangles - ${(
+  statsEl.textContent = `Spheres: ${meshes} - ${(
+    renderer.info.render.triangles / 1000000
+  ).toFixed(0)} million triangles - ${(
     (renderer.info.render.triangles * 3 * 12) /
     (1024 * 1024)
   ).toFixed(0)} MB mem`;
 }
-animate();
 
-// helper
-const geometryTemplate = new THREE.SphereGeometry(50, 2000, 1300);
+// helper / buttons
+
+const button1El = document.getElementById("button1");
+button1El.addEventListener("click", async function () {
+  for (let i = 0; i < 5; i++) {
+    addMesh();
+    await wait(1000);
+  }
+});
+
+
+const button2El = document.getElementById("button2");
+button2El.addEventListener("click", async function () {
+  for (let i = 0; i < 10; i++) {
+    addMesh();
+    await wait(1000);
+  }
+});
+
+const button3El = document.getElementById("button3");
+button3El.addEventListener("click", async function () {
+  for (let i = 0; i < 50; i++) {
+    addMesh();
+    await wait(1000);
+  }
+});
+
+function wait(ms) {
+  return new Promise(function (r) {
+    setTimeout(function () {
+      r();
+    }, ms);
+  });
+}
+
+
+
+
+
+
+
+
+
+
+const geometryTemplate = new THREE.SphereGeometry(5, 2000, 1300);
 
 function addMesh() {
   color += 1000;
@@ -134,6 +147,13 @@ function addMesh() {
   });
   const mesh = new THREE.Mesh(geometry, material);
   scene.add(mesh);
+  mesh.position.set(
+    randomPosition(-150, 150),
+    randomPosition(-150, 150),
+    randomPosition(-150, 150)
+  );
+}
 
-  animate();
+function randomPosition(min, max) {
+  return Math.random() * (max - min) + min;
 }
