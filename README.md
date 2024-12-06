@@ -1,15 +1,17 @@
 # webgl-mem
 weird little test if firefox can load more data than chromium
 
-Want to load a lof of data and optimse by using lod/hiding geometry
+Want to load a lof of data and optimse by using lod/hiding geometry. Sample juts loads and tries to see how much we can load. Geometry only use indices/position.
 
-[sample webgl](https://vegarringdal.github.io/webgl-mem/)
+Atm firefox is doing a lot better, is it a bug in Chromium or is just firefox better ? Maybe I there is a flag Ive missed/can turn on ?
 
-[sample wgpu](https://vegarringdal.github.io/webgl-mem/?wgpu)
+
+[sample webgl](https://vegarringdal.github.io/webgl-mem/) -> this is the one Ive been testing
+
+[sample wgpu](https://vegarringdal.github.io/webgl-mem/?wgpu) -> just for fun
 
 
 > looks like webgpu is able to load more, not have time to test to much, since I cant update mail app to it yet
-
 
 
 ## Browsers
@@ -45,12 +47,11 @@ Tests:
 
 Tests:
   * 1 tabs with 50 spheres
-        * Firefox OK
-        * Edge/chrome, fails on sphere 30
+       * Firefox OK
+       * Edge/chrome, fails on sphere 30
 
 Looks like I could push ff to around 70-80
 
-ofc, not very usable if I did not hide some geometry..
 
 ### Dell latitude 5300 - 16gig memory, UHD 620 graphics
   * windows 10
@@ -63,6 +64,4 @@ Tests:
         * Edge/chrome, fails on sphere 30
 
 Looks like I could push ff to around 100 and use 2 tabs.
-
-ofc, not very usable if I did not hide some geometry..
 
