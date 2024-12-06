@@ -3,6 +3,8 @@ weird little test if firefox can load more data than chromium
 
 https://vegarringdal.github.io/webgl-mem/
 
+Want to load a lof of data and optimse by using lod/hiding geometry
+
 
 ## Browsers
 * Chrome - Version 131.0.6778.109 (Official Build) (64-bit)
@@ -42,5 +44,19 @@ Tests:
 
 Looks like I could push ff to around 70-80
 
+ofc, not very usable if I did not hide some geometry..
 
+### Dell latitude 5300 - 16gig memory, UHD 620 graphics
+  * windows 10
+  * driver version 31.0.101.2125 / 12.05.2023
+  * directX version 12(FL 12.1)
+
+Tests:
+  * 1 tabs with 50 spheres
+        * Firefox OK
+        * Edge/chrome, fails on sphere 30
+
+Looks like I could push ff to around 100 and use 2 tabs.
+
+ofc, not very usable if I did not hide some geometry..
 
