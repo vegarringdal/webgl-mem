@@ -1,9 +1,15 @@
 # webgl-mem
 weird little test if firefox can load more data than chromium
 
-https://vegarringdal.github.io/webgl-mem/
-
 Want to load a lof of data and optimse by using lod/hiding geometry
+
+[sample webgl](https://vegarringdal.github.io/webgl-mem/)
+
+[sample wgpu](https://vegarringdal.github.io/webgl-mem/?wgpu)
+
+
+> looks like webgpu is able to load more, not have time to test to much, since I cant update mail app to it yet
+
 
 
 ## Browsers
@@ -13,7 +19,7 @@ Want to load a lof of data and optimse by using lod/hiding geometry
 
 
 
-## Tested PCs:
+## Tested PCs (WEBGL):
 
 ### Dell precision 7680 - 32gig memory, nvidia rtx 3500 ada 
   * windows 10

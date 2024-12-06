@@ -1,7 +1,10 @@
 import * as THREE from "three";
+import { WebGPURenderer } from "three/webgpu";
 import "./style.css";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+
+const USE_WGPU = new URLSearchParams(location.search).get("wgpu") !== null;
 
 const width = window.innerWidth;
 const height = window.innerHeight;
@@ -17,7 +20,6 @@ canvas.addEventListener(
 );
 
 const statsEl = document.getElementById("stats");
-
 
 let color = 0;
 let meshes = 0;
@@ -35,20 +37,24 @@ const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
 const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 
-const light1 = new THREE.AmbientLight( 0x404040, 2 ); // soft white light
-scene.add( light1 );
+const light1 = new THREE.AmbientLight(0x404040, 2); // soft white light
+scene.add(light1);
 
-const light2 = new THREE.HemisphereLight( 0xffffbb, 0x080820, 2 );
-scene.add( light2 );
-
+const light2 = new THREE.HemisphereLight(0xffffbb, 0x080820, 2);
+scene.add(light2);
 
 // renderer
-const renderer = new THREE.WebGLRenderer({ antialias: true, canvas });
+let renderer;
+if (USE_WGPU) {
+  renderer = new WebGPURenderer({ antialias: true, canvas });
+} else {
+  renderer = new THREE.WebGLRenderer({ antialias: true, canvas });
+}
+
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(width, height);
 renderer.setAnimationLoop(animate);
 document.body.appendChild(renderer.domElement);
-
 
 // controls
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -63,9 +69,11 @@ controls.maxPolarAngle = Math.PI / 2;
 function animate(time) {
   controls.update(time);
   renderer.render(scene, camera);
-  statsEl.textContent = `Spheres: ${meshes} - ${(
-    renderer.info.render.triangles / 1000000
-  ).toFixed(0)} million triangles - ${(
+  statsEl.textContent = `${
+    USE_WGPU ? "WEBGPU" : "WEBGL"
+  } Spheres: ${meshes} - ${(renderer.info.render.triangles / 1000000).toFixed(
+    0
+  )} million triangles - ${(
     (renderer.info.render.triangles * 3 * 8) /
     (1024 * 1024)
   ).toFixed(0)} MB (uint32/floatarray32)`;
@@ -80,7 +88,6 @@ button1El.addEventListener("click", async function () {
     await wait(50);
   }
 });
-
 
 const button2El = document.getElementById("button2");
 button2El.addEventListener("click", async function () {
@@ -106,15 +113,6 @@ function wait(ms) {
   });
 }
 
-
-
-
-
-
-
-
-
-
 const geometryTemplate = new THREE.SphereGeometry(5, 2000, 1300);
 
 function addMesh() {
@@ -130,7 +128,6 @@ function addMesh() {
     this.array = null; // just want to upload to gpu
   };
 
-
   const indices = new THREE.BufferAttribute(
     new Uint32Array(geometryTemplate.index.array),
     1
@@ -144,7 +141,7 @@ function addMesh() {
 
   const material = new THREE.MeshStandardMaterial({
     color: new THREE.Color().setHex(color),
-    flatShading: true
+    flatShading: true,
   });
   const mesh = new THREE.Mesh(geometry, material);
   scene.add(mesh);
