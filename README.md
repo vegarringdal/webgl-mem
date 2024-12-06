@@ -4,6 +4,11 @@ weird little test if firefox can load more data than chromium
 https://vegarringdal.github.io/webgl-mem/
 
 
+## Browsers
+* Chrome - Version 131.0.6778.109 (Official Build) (64-bit)
+*  Edge - Version 131.0.2903.70 (Official build) (64-bit)
+*  Firefox - 133.0
+
 
 
 ## Tested PCs:
@@ -25,8 +30,17 @@ Tests:
 > firefox also manged to do the same on the intel(R) UHD graphics
 
 
+### Dell latitude 5440 - 16gig memory, iris grahpics 
+  * windows 10
+  * driver version 31.0.101.5522 / 12.05.2024
+  * directX version 12(FL 12.1)
 
-## Browsers
-* Chrome - Version 131.0.6778.109 (Official Build) (64-bit)
-*  Edge - Version 131.0.2903.70 (Official build) (64-bit)
-*  Firefox - 133.0
+Tests:
+  * 1 tabs with 50 spheres
+        * Firefox OK
+        * Edge/chrome, fails on sphere 30
+
+Looks like I could push ff to around 70-80
+
+
+
