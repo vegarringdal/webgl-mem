@@ -6,6 +6,22 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
 const USE_WGPU = new URLSearchParams(location.search).get("wgpu") !== null;
 
+if (USE_WGPU) {
+  async function testwgpu() {
+    const adapter =
+      typeof navigator?.gpu !== "undefined"
+        ? await navigator?.gpu.requestAdapter({
+            powerPreference: "high-performance",
+          })
+        : null;
+
+    if (adapter === null) {
+      alert("WebGPUBackend: Unable to create WebGPU adapter.");
+    }
+  }
+  testwgpu();
+}
+
 const width = window.innerWidth;
 const height = window.innerHeight;
 const canvas = document.getElementById("canvas");
