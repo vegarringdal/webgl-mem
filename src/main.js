@@ -35,6 +35,13 @@ const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
 const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 
+const light1 = new THREE.AmbientLight( 0x404040, 2 ); // soft white light
+scene.add( light1 );
+
+const light2 = new THREE.HemisphereLight( 0xffffbb, 0x080820, 2 );
+scene.add( light2 );
+
+
 // renderer
 const renderer = new THREE.WebGLRenderer({ antialias: true, canvas });
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -59,9 +66,9 @@ function animate(time) {
   statsEl.textContent = `Spheres: ${meshes} - ${(
     renderer.info.render.triangles / 1000000
   ).toFixed(0)} million triangles - ${(
-    (renderer.info.render.triangles * 3 * 12) /
+    (renderer.info.render.triangles * 3 * 8) /
     (1024 * 1024)
-  ).toFixed(0)} MB mem`;
+  ).toFixed(0)} MB (uint32/floatarray32)`;
 }
 
 // helper / buttons
@@ -70,7 +77,7 @@ const button1El = document.getElementById("button1");
 button1El.addEventListener("click", async function () {
   for (let i = 0; i < 5; i++) {
     addMesh();
-    await wait(1000);
+    await wait(50);
   }
 });
 
@@ -79,7 +86,7 @@ const button2El = document.getElementById("button2");
 button2El.addEventListener("click", async function () {
   for (let i = 0; i < 10; i++) {
     addMesh();
-    await wait(1000);
+    await wait(50);
   }
 });
 
@@ -87,7 +94,7 @@ const button3El = document.getElementById("button3");
 button3El.addEventListener("click", async function () {
   for (let i = 0; i < 50; i++) {
     addMesh();
-    await wait(1000);
+    await wait(50);
   }
 });
 
@@ -120,30 +127,24 @@ function addMesh() {
     3
   );
   vertices.onUploadCallback = function () {
-    this.array = null;
+    this.array = null; // just want to upload to gpu
   };
 
-  const normal = new THREE.BufferAttribute(
-    new Float32Array(geometryTemplate.attributes.normal.array),
-    3
-  );
-  normal.onUploadCallback = function () {
-    this.array = null;
-  };
 
   const indices = new THREE.BufferAttribute(
     new Uint32Array(geometryTemplate.index.array),
     1
   );
   indices.onUploadCallback = function () {
-    this.array = null;
+    this.array = null; // just want to upload to gpu
   };
 
   geometry.setIndex(indices);
   geometry.setAttribute("position", vertices);
-  geometry.setAttribute("normal", normal);
-  const material = new THREE.MeshBasicMaterial({
+
+  const material = new THREE.MeshStandardMaterial({
     color: new THREE.Color().setHex(color),
+    flatShading: true
   });
   const mesh = new THREE.Mesh(geometry, material);
   scene.add(mesh);
